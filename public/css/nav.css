@@ -1,0 +1,19 @@
+/* to push content below navbar: */
+body {
+	padding-top: 50px;
+}
+
+/* sets navbar (and it's children elements) to specified color */
+.navbar > * {
+	background-color: #DD0011;
+}
+
+.navbar {
+	border-bottom: 0px;
+	opacity: 0.9;
+}
+
+.btn {
+	background-color: blue;
+	color: red;
+}
