@@ -173,6 +173,8 @@ app.get('/photos', ensureAuthenticated, function(req, res){
             //create temporary json object
             tempJSON = {};
             tempJSON.url = item.images.low_resolution.url;
+            tempJSON.caption= item.caption.text;
+
             //insert json object into image array
             return tempJSON;
           });
@@ -209,7 +211,7 @@ app.get('/auth/instagram/callback',
 
 // GET /auth/facebook
 app.get('/auth/facebook',
-  passport.authenticate('facebook'),
+  passport.authenticate('facebook', { authType: 'reauthenticate'}), // REPROMPTS PASSWORD
   function(req, res){
     // req directed fo Facebook for authentication
   });
