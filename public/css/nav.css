@@ -5,7 +5,7 @@ body {
 
 /* sets navbar (and it's children elements) to specified color */
 .navbar > * {
-	background-color: #DD0011;
+	background-color: #B3DEF5;
 }
 
 .navbar {

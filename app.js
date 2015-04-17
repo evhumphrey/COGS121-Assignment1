@@ -169,13 +169,29 @@ app.get('/photos', ensureAuthenticated, function(req, res){
         access_token: user.access_token,
         complete: function(data) {
           //Map will iterate through the returned data obj
+          var count=0;
           var imageArr = data.map(function(item) {
             //create temporary json object
             tempJSON = {};
             tempJSON.url = item.images.low_resolution.url;
             tempJSON.caption= item.caption.text;
 
+            //for bootstrap to work correctly with image setup
+            tempJSON.row = false;
+            tempJSON.end_row = false;
+            
+            if (count % 3 == 0) {
+              tempJSON.row = true;
+              console.log('row == true');
+            } 
+            console.log(count);
+            if ((count + 1) % 3 == 0) {
+              tempJSON.end_row = true;
+              console.log('end_row == true');
+            }
+            count = count + 1; 
             //insert json object into image array
+            
             return tempJSON;
           });
           res.render('photos', {photos: imageArr});
