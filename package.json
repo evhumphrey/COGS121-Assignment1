@@ -1,7 +1,7 @@
 {
   "name": "mywebapp",
   "version": "0.0.1",
-  "author": "Alex Yang, Brian Soe, Purvi Desai",
+  "author": "Hien Hoang, Elliot Humphrey",
   "description": "Assignment 1 for COGS 121",
   "scripts": {
     "start": "node app.js"
