@@ -1,0 +1,27 @@
+body {
+	/*background-color: #A9DBD5*/
+	background: url('../img/bg.jpeg');
+	background-size: 100%;
+	height: auto;
+
+}
+
+p > * {
+	padding-bottom: 0px;
+}
+
+.jumbotron {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.text-light {
+	font-weight: lighter;
+}
+
+.btn {
+	width: 100%;
+}
+
+.btn-container {
+	padding-top: 15px;
+}
