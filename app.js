@@ -3,6 +3,7 @@ var express = require('express');
 var passport = require('passport');
 var InstagramStrategy = require('passport-instagram').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var fbgraph = require('fbgraph');
 var http = require('http');
 var path = require('path');
 var handlebars = require('express-handlebars');
@@ -156,6 +157,8 @@ app.get('/login', function(req, res){
 });
 
 app.get('/account', ensureAuthenticated, function(req, res){
+
+  //var profile_pic_url = "https://api.instagram.com/v1/users/"+user.id+"?access_token="+user.access_token+"&callback=?";
   res.render('account', {user: req.user});
 });
 
@@ -227,7 +230,7 @@ app.get('/auth/instagram/callback',
 
 // GET /auth/facebook
 app.get('/auth/facebook',
-  passport.authenticate('facebook', { authType: 'reauthenticate'}), // REPROMPTS PASSWORD
+  passport.authenticate('facebook'),
   function(req, res){
     // req directed fo Facebook for authentication
   });
