@@ -1,0 +1,20 @@
+p {
+	padding-top: 10px;
+	padding-left: 2%;
+	padding-right: 2%;
+}
+
+.thumbnail {
+	padding: 0;
+	margin-left: 0;
+	margin-right: 0;
+	border-radius: 0;
+	height: 100%;
+	min-height: 150px;
+	
+}
+
+.liked {
+	width: 100%;
+}
+

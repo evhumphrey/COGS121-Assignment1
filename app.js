@@ -160,6 +160,46 @@ app.get('/account', ensureAuthenticated, function(req, res){
   res.render('account', {user: req.user});
 });
 
+app.get('/feed', ensureAuthenticated, function(req, res){
+  var query = models.User.where({ name: req.user.username });
+    query.findOne(function (err, user) {
+      if (err) return handleError(err);
+      if (user) {
+        graph.setAccessToken(user.fb_access_token);
+        graph.get('/' + req.user.id + '/feed', function(err, fb_res) {
+          console.log(fb_res.data);
+
+          var count = 0;
+          var imageArr = (fb_res.data).map(function(item) {
+            tempJSON = {};
+            tempJSON.url = item.link;
+            tempJSON.message = item.message;
+
+            //for bootstrap to work correctly with image setup
+            tempJSON.row = false;
+            tempJSON.end_row = false;
+            
+            if (count % 3 == 0) {
+              tempJSON.row = true;
+              //console.log('row == true');
+            } 
+            console.log(count);
+            if ((count + 1) % 3 == 0) {
+              tempJSON.end_row = true;
+              //console.log('end_row == true');
+            }
+            count = count + 1; 
+            return tempJSON;
+          });
+          console.log(imageArr);
+          res.render('feed', {photos: imageArr});
+        }); //END GET
+
+      } //END USER
+    }); //END QUERY
+  
+});
+
 app.get('/photos', ensureAuthenticated, function(req, res){
   //console.log("strategy = " + req.user.provider);
   if (req.user.provider == 'instagram') {
@@ -211,13 +251,30 @@ app.get('/photos', ensureAuthenticated, function(req, res){
       if (err) return handleError(err);
       if (user) {
         graph.setAccessToken(user.fb_access_token);
-        graph.get('/' + req.user.id + '/photos?type=uploaded', function(err, ress) {
+        graph.get('/' + req.user.id + '/photos?type=uploaded', function(err, fb_res) { //fb_res is DIFFERENT from app.get res!!!!
           console.log('data below?');
-          console.log(ress.data);
+          console.log(fb_res.data);
           
-          var imageArr = (ress.data).map(function(item) {
+          var count = 0;
+          var imageArr = (fb_res.data).map(function(item) {
             tempJSON = {};
             tempJSON.url = item.source;
+            tempJSON.caption = item.name;
+
+            //for bootstrap to work correctly with image setup
+            tempJSON.row = false;
+            tempJSON.end_row = false;
+            
+            if (count % 3 == 0) {
+              tempJSON.row = true;
+              //console.log('row == true');
+            } 
+            console.log(count);
+            if ((count + 1) % 3 == 0) {
+              tempJSON.end_row = true;
+              //console.log('end_row == true');
+            }
+            count = count + 1; 
             return tempJSON;
           });
           console.log(imageArr);
@@ -232,37 +289,6 @@ app.get('/photos', ensureAuthenticated, function(req, res){
 
 
   } // END IF PROVIDER
-
-
-  /*
-  if (req.user.provider == 'facebook') {
-  console.log('facebook account');
-  var query  = models.User.where({ name: req.user.username });
-  query.findOne(function (err, user) {
-    if (err) return handleError(err);
-    if (user) {
-      // doc may be null if no document matched
-     graph.setAccessToken(user.fb_access_token);
-     //console.log('here');
-     graph.get("/" + req.user.id + "/photos?type=uploaded", function(err, res) {
-      
-      console.log("hello there should be data below");
-      console.log(res.data);
-
-     });
-     //console.log("IT WORKS" + res.data);
-
-     console.log('test');
-
-     
-   
-   }
-   res.render('photos');
- });
-}
-*/
-        
-            
        
 }); // END OF PHOTOS
 
@@ -292,7 +318,7 @@ app.get('/auth/instagram/callback',
 
 // GET /auth/facebook
 app.get('/auth/facebook',
-  passport.authenticate('facebook', { scope: ['user_likes', 'user_photos'] }),
+  passport.authenticate('facebook', { scope: ['user_likes', 'user_photos', 'user_posts'] }),
   function(req, res){
     // req directed fo Facebook for authentication
   });
