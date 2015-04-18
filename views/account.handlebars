@@ -1,4 +1,7 @@
-<head><link rel="stylesheet" type="text/css" href="css/nav.css"></head>
+<head>
+<link rel="stylesheet" type="text/css" href="css/nav.css">
+<link rel="stylesheet" type="text/css" href="css/account.css">
+</head>
 
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
@@ -21,16 +24,23 @@
         
       </ul>
       <form class="navbar-form navbar-right" action="/logout" method="GET">
-      	<input type="submit" class="btn btn-default" value="logout">
+      	<input type="submit" class="btn btn-primary" value="logout">
       </form> 
       
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
-hello account
+
+<div class="container">
+	<div class="page-header center-block">
+		<h1>Hello, {{user.displayName}}!</h1>
+	</div>
 <p>ID: {{user.id}}</p>
 <p>Username: {{user.username}}</p>
 <p>Name:{{user.displayName}}</p>
-<img src="//graph.facebook.com/{{user.id}}/picture?type=large">
+<div class="row text-center"> 
+<img class="img-responsive img-circle center-block" src="//graph.facebook.com/{{user.id}}/picture?type=large">
+</div>
+</div>
 

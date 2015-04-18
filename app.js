@@ -3,7 +3,7 @@ var express = require('express');
 var passport = require('passport');
 var InstagramStrategy = require('passport-instagram').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-var fbgraph = require('fbgraph');
+var graph = require('fbgraph');
 var http = require('http');
 var path = require('path');
 var handlebars = require('express-handlebars');
@@ -161,6 +161,8 @@ app.get('/account', ensureAuthenticated, function(req, res){
 });
 
 app.get('/photos', ensureAuthenticated, function(req, res){
+  //console.log("strategy = " + req.user.provider);
+  if (req.user.provider == 'instagram') {
   var query  = models.User.where({ name: req.user.username });
   query.findOne(function (err, user) {
     if (err) return handleError(err);
@@ -183,12 +185,12 @@ app.get('/photos', ensureAuthenticated, function(req, res){
             
             if (count % 3 == 0) {
               tempJSON.row = true;
-              console.log('row == true');
+              //console.log('row == true');
             } 
             console.log(count);
             if ((count + 1) % 3 == 0) {
               tempJSON.end_row = true;
-              console.log('end_row == true');
+              //console.log('end_row == true');
             }
             count = count + 1; 
             //insert json object into image array
@@ -200,7 +202,69 @@ app.get('/photos', ensureAuthenticated, function(req, res){
       }); 
     }
   });
-});
+  }
+
+  if (req.user.provider == 'facebook'); {
+    console.log('facebook account');
+    var query = models.User.where({ name: req.user.username });
+    query.findOne(function (err, user) {
+      if (err) return handleError(err);
+      if (user) {
+        graph.setAccessToken(user.fb_access_token);
+        graph.get('/' + req.user.id + '/photos?type=uploaded', function(err, ress) {
+          console.log('data below?');
+          console.log(ress.data);
+          
+          var imageArr = (ress.data).map(function(item) {
+            tempJSON = {};
+            tempJSON.url = item.source;
+            return tempJSON;
+          });
+          console.log(imageArr);
+          res.render('photos', {photos: imageArr});         
+
+        }); //END GET
+
+        //console.log(imageArr);
+        
+      }
+    }); // END QUERY
+
+
+  } // END IF PROVIDER
+
+
+  /*
+  if (req.user.provider == 'facebook') {
+  console.log('facebook account');
+  var query  = models.User.where({ name: req.user.username });
+  query.findOne(function (err, user) {
+    if (err) return handleError(err);
+    if (user) {
+      // doc may be null if no document matched
+     graph.setAccessToken(user.fb_access_token);
+     //console.log('here');
+     graph.get("/" + req.user.id + "/photos?type=uploaded", function(err, res) {
+      
+      console.log("hello there should be data below");
+      console.log(res.data);
+
+     });
+     //console.log("IT WORKS" + res.data);
+
+     console.log('test');
+
+     
+   
+   }
+   res.render('photos');
+ });
+}
+*/
+        
+            
+       
+}); // END OF PHOTOS
 
 
 // GET /auth/instagram
@@ -228,7 +292,7 @@ app.get('/auth/instagram/callback',
 
 // GET /auth/facebook
 app.get('/auth/facebook',
-  passport.authenticate('facebook'),
+  passport.authenticate('facebook', { scope: ['user_likes', 'user_photos'] }),
   function(req, res){
     // req directed fo Facebook for authentication
   });
