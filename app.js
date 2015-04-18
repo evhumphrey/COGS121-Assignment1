@@ -69,9 +69,9 @@ passport.use(new InstagramStrategy({
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
     models.User.findOrCreate({
-      "name": profile.name,
+      "name": profile.username,
       "id": profile.id,
-      "access_token": accessToken 
+      "ig_access_token": accessToken 
     }, function(err, user, created) {
       
       // created will be true here
@@ -100,7 +100,7 @@ passport.use(new FacebookStrategy({
     models.User.findOrCreate({
       "name": profile.username,
       "id": profile.id,
-      "access_token": accessToken 
+      "fb_access_token": accessToken 
     }, function(err, user, created) {
       
       // created will be true here
@@ -157,8 +157,6 @@ app.get('/login', function(req, res){
 });
 
 app.get('/account', ensureAuthenticated, function(req, res){
-
-  //var profile_pic_url = "https://api.instagram.com/v1/users/"+user.id+"?access_token="+user.access_token+"&callback=?";
   res.render('account', {user: req.user});
 });
 
@@ -169,7 +167,7 @@ app.get('/photos', ensureAuthenticated, function(req, res){
     if (user) {
       // doc may be null if no document matched
       Instagram.users.liked_by_self({
-        access_token: user.access_token,
+        access_token: user.ig_access_token,
         complete: function(data) {
           //Map will iterate through the returned data obj
           var count=0;
