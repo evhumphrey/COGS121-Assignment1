@@ -21,7 +21,10 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="/account">Account<span class="sr-only">(current)</span></a></li>
         <li><a href="/photos">Photos</a></li>
+        
         <li><a href="/feed">Feed</a></li>
+        
+        
         
       </ul>
       <form class="navbar-form navbar-right" action="/logout" method="GET">
@@ -36,13 +39,13 @@
 <div class="container">
 	<div class="page-header center-block">
 		<h1>Hello, {{user.displayName}}!</h1>
+		<h2>{{user.provider}}</h2>
 	</div>
 <img class="img-responsive img-circle center-block" src="//graph.facebook.com/{{user.id}}/picture?type=large">
 <h3>Profile statics</h3>
 <p><strong>ID:</strong> {{user.id}}</p>
 <p><strong>Username: </strong>{{user.username}}</p>
 <p><strong>Name: </strong>{{user.displayName}}</p>
-<p>Birthday: </p>
 <div class="row text-center"> 
 
 </div>
